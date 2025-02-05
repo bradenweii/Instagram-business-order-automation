@@ -10,6 +10,11 @@
   },
   "dependencies": {
     "@xyflow/react": "^12.3.0",
+    "axios": "^1.7.9",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "exprss": "^0.0.1-security",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

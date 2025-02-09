@@ -19,7 +19,7 @@ This system increases efficiency by eliminating the work of manually taking larg
 - Automated Customer Interaction:** Sends receipts directly to customers.
 - Efficiency Boost:** Reduces manual effort in handling large order volumes.
 ## Order CSV file preview: 
-![UI Preview](public/images/orders.png)
+![UI Preview](public/orders.png)
 
 ### Prerequisites
 Ensure you have the following installed:

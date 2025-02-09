@@ -1,11 +1,12 @@
 import type { Node, BuiltInNode } from "@xyflow/react";
 
-export type FunctionNode = Node<
-  {
-    label: string;
+interface AppNodeData {
+    label?: string;
+    conversations?: any[];
+    onDataUpdate?: (data: any) => void;
     func?: (input: any) => any;
-    functionName: string;
-  },
-  "function-node"
->;
-export type AppNode = BuiltInNode | FunctionNode;
+    functionName?: string;
+    onProcessComplete?: (orders: any) => void;
+}
+
+export type AppNode = Node<AppNodeData>;

@@ -1,35 +1,122 @@
-import React, { useState ,useEffect} from "react";
+import { useState ,useEffect} from "react";
 import { Handle } from "@xyflow/react";
 import axios from "axios";
+import { useStore } from '../nodes/index';
+
+
+
+interface ProcessedMessage {
+  name: string;
+  message: string;
+  created_time: string;
+}
 
 const OrderProcessingNode = ({data}) => {
-  const [messages, setMessages] = useState(data.messages || []);
+  const [messages, setMessages] = useState<ProcessedMessage[]>([]);
   const [processedOrders, setProcessedOrders] = useState([]);
   const [accessKey, setAccessKey] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
+  const [orderResults, setOrderResults] = useState("");
+
+  const conversations = useStore((state) => state.conversations);
+  const accessToken = useStore((state) => state.accessToken);
 
 
   useEffect(() => {
-    if (data.messages) {
-        setMessages(data.messages);
+    console.log("Stage 2 - Received conversations:", conversations);
+    console.log("Stage 2 - Received access token:", accessToken);
+
+    if (conversations && conversations.length > 0) {
+      const extractedMessages = conversations.flatMap(conv => {
+        const messages = conv.messages?.data || [];
+        return messages.map(msg => ({
+          message: msg.message,
+          created_time: msg.created_time,
+          name: msg.from?.username || conv.name,
+          user_id: msg.from?.id
+        }));
+      }).filter(msg => msg.message && msg.message.toLowerCase().includes('order'));
+      
+      console.log("Stage 2 - Extracted messages:", extractedMessages);
+      setMessages(extractedMessages);
     }
-}, [data.messages]);
+  }, [conversations]);
 
 const processOrders = async () => {
     setIsProcessing(true);
     try {
-        const response = await axios.post("http://localhost:5000/api/processOrders", {
-            conversations: messages,
-            openaiKey: accessKey
-        });
-        setProcessedOrders(response.data.orders);
-        // Pass processed orders to the next node
-        data.onOrdersProcessed(response.data.orders);
+      if (!messages || messages.length === 0) {
+        throw new Error("No messages to process");
+      }
+
+      const messageText = messages.map(msg => ({
+        message: msg.message,
+        created_time: msg.created_time,
+        name: msg.from?.username || msg.name,
+        user_id: msg.name
+      }));
+
+    
+      console.log("Processing messages:", messageText);
+      
+      const response = await axios.post("http://localhost:8001/api/processOrders", {
+        conversations: messageText,
+          openaiKey: accessKey
+      });
+      
+      console.log("Backend response:", response.data);
+
+      
+      // if (response.data.orders && response.data.orders.length > 0) {
+      //     setOrderResults(response.data.orders[0].order_details);
+      //     setProcessedOrders(response.data.orders); 
+      //     console.log("Stage 2 - Orders being passed to Stage 3:", response.data.orders);
+          
+      // }
+      // if (data.onProcessComplete) {
+      //   console.log("Stage 2 - Calling onProcessComplete with orders:", response.data.orders);
+      //   data.onProcessComplete(response.data.orders);
+      // }
+
+      if (response.data.status === "success" && response.data.orders) {
+        console.log("Processed orders:", response.data.orders);
+        setOrderResults(response.data.orders[0].order_details);
+        
+        // Add user_id to the processed orders
+        const ordersWithIds = response.data.orders.map((order, index) => ({
+          ...order,
+          user_id: messages[index].user_id  
+        }));
+        
+        setProcessedOrders(ordersWithIds);
+        
+        if (data.onProcessComplete) {
+          console.log("Calling onProcessComplete with orders:", ordersWithIds);
+          data.onProcessComplete(ordersWithIds);
+        }
+      }
+
+      if (response.data.csv_data) {
+        const blob = new Blob([response.data.csv_data], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `orders_${new Date().toISOString().split('T')[0]}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+      }
+
+
+
     } catch (error) {
-        console.error("Error processing orders:", error);
+      console.error("Error processing orders:", error);
+      console.error("Messages state:", messages);
+      setOrderResults("Error processing orders: " + (error.message || "Unknown error"));
     } finally {
-        setIsProcessing(false);
-    }
+      setIsProcessing(false);
+  }
 };
 
   return (
@@ -51,29 +138,51 @@ const processOrders = async () => {
         />
       </div>
 
+      {/* Debug info */}
+      <div className="mt-2 text-xs text-gray-500">
+        Messages received: {messages ? messages.length : 0}
+      </div>
+
       {/* Display received messages */}
-      {messages.length > 0 && (
+      {messages && messages.length > 0 && (
         <div className="mt-4 p-2 border border-gray-200 rounded bg-gray-100">
           <h4 className="font-semibold">Received Messages:</h4>
           <ul className="text-sm max-h-40 overflow-y-auto">
-            {messages.map((msg, index) => (
-              <li key={index} className="p-1 border-b">{msg}</li>
+            {messages
+            .filter((msg) => msg.message.toLowerCase().includes("order"))
+            .map((msg, index) => (
+              <li key={index} className="p-1 border-b">{msg.message}</li>
             ))}
           </ul>
         </div>
       )}
+
+
       <button
-          onClick={processOrders}
-          disabled={isProcessing || !messages.length}
-          className="mt-2 px-4 py-2 bg-blue-500 text-white rounded disabled:bg-blue-300"
+        onClick={processOrders}
+        disabled={isProcessing}
+        data-testid="process-orders-btn"
+        className="mt-2 px-4 py-2 bg-blue-500 text-white rounded disabled:bg-blue-300"
       >
-      {isProcessing ? "Processing..." : "Process Orders"}
+        {isProcessing ? "Processing..." : "Process Orders"}
       </button>
 
-    
+      <div className="mt-4">
+        <label htmlFor="orderResults" className="block text-sm font-medium text-gray-700">
+          Generated Orders:
+        </label>
+        <textarea
+          id="orderResults"
+          name="orderResults"
+          rows={4}
+          value={orderResults}
+          readOnly
+          className="mt-1 w-full px-4 py-2 border border-gray-300 rounded bg-gray-50"
+        />
+      </div>
 
-        <Handle type="target" position="top" id="step1" />
-        <Handle type="source" position="bottom" id="step3" />
+      <Handle type="target" position="top" id="step1" />
+      <Handle type="source" position="bottom" id="step3" />
     </div>
   );
 };

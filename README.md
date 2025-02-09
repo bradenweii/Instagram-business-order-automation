@@ -18,7 +18,8 @@ This system increases efficiency by eliminating the work of manually taking larg
 - Receipt Generation:** Creates order receipts in CSV format and syncs with Google Sheets.
 - Automated Customer Interaction:** Sends receipts directly to customers.
 - Efficiency Boost:** Reduces manual effort in handling large order volumes.
-## Order CSV file preview: (public/images/orders.png)
+## Order CSV file preview: 
+![UI Preview](public/images/orders.png)
 
 ### Prerequisites
 Ensure you have the following installed:

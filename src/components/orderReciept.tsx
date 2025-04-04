@@ -1,7 +1,14 @@
 import { useState,useEffect} from "react";
-import { Handle } from "@xyflow/react";
+import { Handle, Position } from "@xyflow/react";
 import axios from "axios";
 import { useStore } from '../nodes/index';
+
+// interface OrderRecieptProps {
+//   data: {
+//     orders?: any[];
+//     accessToken?: string;
+//   }
+// }
 
 interface Order {
     order_details: string;
@@ -15,7 +22,7 @@ interface Order {
 
   
 
-const OrderReciept = ({data}) => {
+const OrderReciept = () => {
     const [isSending, setIsSending] = useState(false);
     const [sentStatus, setSentStatus] = useState<Record<string, boolean>>({});
 
@@ -103,9 +110,10 @@ const OrderReciept = ({data}) => {
         try {
           await Promise.all(processedOrders.map(order => sendReceipt(order)));
           console.log("All receipts sent successfully");
-        } catch (error) {
+        } catch (error: unknown) {
           console.error("Error sending all receipts:", error);
-          alert("Failed to send all receipts: " + error.message);
+          const message = error instanceof Error ? error.message : 'Unknown error';
+          alert("Failed to send all receipts: " + message);
         } finally {
           setIsSending(false);
         }
@@ -153,7 +161,11 @@ const OrderReciept = ({data}) => {
           ) : (
             <p className="mt-4 text-gray-500">No orders to process</p>
           )}
-      <Handle type="target" position="top" id="step1" />    
+      <Handle 
+        type="target" 
+        position={Position.Top} 
+        id="step1" 
+      />    
       </div>
 
 );

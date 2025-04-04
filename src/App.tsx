@@ -1,5 +1,4 @@
 import { useCallback, useState } from "react";
-import { useStore } from './nodes/index';
 import {
   ReactFlow,
   Background,
@@ -21,7 +20,6 @@ export default function App() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
-  const runFlow = useStore(state => state.runFlow);
 
 
   // const onConnect: OnConnect = useCallback(

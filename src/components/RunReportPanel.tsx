@@ -63,7 +63,7 @@ export function RunReportPanel({ isOpen, onClose }: RunReportPanelProps) {
       </div>
       <div className="p-4 text-gray-600">
       <div className="space-y-4">
-        {steps.map((step, index) => (
+        {steps.map((step) => (
           <div
             key={step.name}
             className="flex items-center gap-3"

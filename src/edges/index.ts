@@ -1,5 +1,4 @@
 import type { Edge, EdgeTypes } from '@xyflow/react';
-import React from 'react';
 
 
 export const initialEdges: Edge[] = [

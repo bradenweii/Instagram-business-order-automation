@@ -1,8 +1,7 @@
-import React, { useState } from "react";
-import { Handle } from "@xyflow/react";
+import { Handle,Position } from "@xyflow/react";
 import axios from "axios";
 import { useStore } from '../nodes/index';
-
+import { useState } from 'react';
 interface Message {
     created_time: string;
     message: string;
@@ -15,8 +14,13 @@ interface Conversation {
         data: Message[];
     };
 }
+interface IgLoginProps {
+    data: {
+      onDataUpdate?: (data: any) => void;
+    };
+  }
 
-const igLogin = ({data}) => {
+const igLogin = ({ data }: IgLoginProps) => {
     const [messages, setMessages] = useState<Conversation[]>([]);
     const [accessKey, setAccessKey] = useState("");
     const [isLoading, setIsLoading] = useState(false);
@@ -54,7 +58,7 @@ const igLogin = ({data}) => {
 
             
         
-        } catch (error) {
+        } catch (error: any) {
             console.error("Error:", error);
             setError(error.response?.data?.error || "Failed to fetch messages");
         } finally {
@@ -130,7 +134,7 @@ const igLogin = ({data}) => {
                     />
                 </div>
             </div>
-            <Handle type="source" position="bottom" id="step1" />
+            <Handle type="source" position={Position.Bottom} id="step1" />
         </div>
     );
 };

@@ -1,5 +1,5 @@
 import { useState ,useEffect} from "react";
-import { Handle } from "@xyflow/react";
+import { Handle,Position} from "@xyflow/react";
 import axios from "axios";
 import { useStore } from '../nodes/index';
 
@@ -7,13 +7,24 @@ import { useStore } from '../nodes/index';
 
 interface ProcessedMessage {
   name: string;
-  message: string;
   created_time: string;
+  from?: {
+    username: string;
+    id: string;
+  };
+  user_id?: string;
+  message: string;
+}
+interface OrderProcessProps {
+  data: {
+    onProcessComplete?: (orders: any[]) => void;
+  };
 }
 
-const OrderProcessingNode = ({data}) => {
+const OrderProcessingNode = ({ data }: OrderProcessProps) => {
   const [messages, setMessages] = useState<ProcessedMessage[]>([]);
-  const [processedOrders, setProcessedOrders] = useState([]);
+
+  const [,setProcessedOrders] = useState([]);
   const [accessKey, setAccessKey] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const [orderResults, setOrderResults] = useState("");
@@ -29,7 +40,7 @@ const OrderProcessingNode = ({data}) => {
     if (conversations && conversations.length > 0) {
       const extractedMessages = conversations.flatMap(conv => {
         const messages = conv.messages?.data || [];
-        return messages.map(msg => ({
+        return messages.map((msg:ProcessedMessage) => ({
           message: msg.message,
           created_time: msg.created_time,
           name: msg.from?.username || conv.name,
@@ -83,7 +94,7 @@ const processOrders = async () => {
         setOrderResults(response.data.orders[0].order_details);
         
         // Add user_id to the processed orders
-        const ordersWithIds = response.data.orders.map((order, index) => ({
+        const ordersWithIds = response.data.orders.map((order: any, index: number) => ({
           ...order,
           user_id: messages[index].user_id  
         }));
@@ -110,7 +121,7 @@ const processOrders = async () => {
 
 
 
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error processing orders:", error);
       console.error("Messages state:", messages);
       setOrderResults("Error processing orders: " + (error.message || "Unknown error"));
@@ -181,8 +192,8 @@ const processOrders = async () => {
         />
       </div>
 
-      <Handle type="target" position="top" id="step1" />
-      <Handle type="source" position="bottom" id="step3" />
+      <Handle type="target" position={Position.Top} id="step1" />
+      <Handle type="source" position={Position.Bottom} id="step3" />
     </div>
   );
 };

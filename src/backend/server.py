@@ -99,12 +99,12 @@ def get_conversations():
 
 
 # Add OPTIONS handling for preflight requests
-@app.after_request
-def after_request(response):
-    response.headers.add('Access-Control-Allow-Origin', 'http://localhost:5173')
-    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Instagram-Access-Token')
-    response.headers.add('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
-    return response
+# @app.after_request
+# def after_request(response):
+#     response.headers.add('Access-Control-Allow-Origin', 'http://localhost:5173')
+#     response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Instagram-Access-Token')
+#     response.headers.add('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
+#     return response
 
 @app.route("/getMessages", methods=["GET"])
 def get_messages():

@@ -32,7 +32,7 @@ const igLogin = ({ data }: IgLoginProps) => {
         setError("");
         try {
             console.log("Making API request with token:", accessKey);
-            const response = await axios.get("http://localhost:8001/api/getConversations", {
+            const response = await axios.get("https://instagram-business-order-automation-1.onrender.com/api/getConversations", {
                 headers: {
                     'Instagram-Access-Token': accessKey
                 }

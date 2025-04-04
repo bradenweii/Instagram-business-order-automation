@@ -69,8 +69,10 @@ const processOrders = async () => {
 
     
       console.log("Processing messages:", messageText);
-      
-      const response = await axios.post("http://localhost:8001/api/processOrders", {
+     
+
+
+      const response = await axios.post('https://instagram-business-order-automation-1.onrender.com/api/processOrders', {
         conversations: messageText,
           openaiKey: accessKey
       });

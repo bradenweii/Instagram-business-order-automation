@@ -85,7 +85,7 @@ const OrderReciept = () => {
               };
 
               const response = await axios.post(
-                "http://localhost:8001/api/sendMessage",
+                "https://instagram-business-order-automation-1.onrender.com/api/sendMessage",
                 payload,
                 { headers }
               );

@@ -13,7 +13,9 @@ import os
 app = Flask(__name__)
 CORS(app, resources={
     r"/*": {
-        "origins": ["http://localhost:5173"],  # Your frontend URL
+        "origins": ["http://localhost:5173",
+                    "https://ig-business-order-automation.vercel.app"
+                    ],  # Your frontend URL
         "methods": ["GET", "POST", "OPTIONS"],
         "allow_headers": ["Content-Type", "Instagram-Access-Token"]
     }

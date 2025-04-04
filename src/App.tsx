@@ -14,7 +14,7 @@ import { initialNodes, nodeTypes } from "./nodes";
 import { initialEdges, edgeTypes } from "./edges";
 import { RunButton } from "./components/RunButton";
 import { RunReportPanel } from "./components/RunReportPanel";
-import { Logo } from "./components/Logo";
+//import { Logo } from "./components/Logo";
 
 export default function App() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
@@ -66,7 +66,7 @@ export default function App() {
       fitView
     >
       <Background />
-      <Logo />
+      
       <RunButton
        onRun={() => setIsPanelOpen(true)}
         />

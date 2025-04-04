@@ -12,25 +12,29 @@ import os
 
 app = Flask(__name__)
 CORS(app, resources={
-    r"/*": {
-        "origins": ["http://localhost:5173",
-                    "https://ig-business-order-automation.vercel.app"
-                    ],  # Your frontend URL
+    r"/api/*": {
+        "origins": [
+            "http://localhost:5173",
+            "https://ig-business-order-automation.vercel.app",
+            "*"  # Add this temporarily for debugging
+        ],
         "methods": ["GET", "POST", "OPTIONS"],
-        "allow_headers": ["Content-Type", "Instagram-Access-Token"]
+        "allow_headers": ["Content-Type", "Instagram-Access-Token"],
+        "expose_headers": ["Content-Type"],
+        "supports_credentials": True
     }
 })
 
 
 # Basic route to test server
-@app.route("/", methods=["GET"])
+@app.route("/", methods=["GET,OPTIONS"])
 def home():
     print("Home endpoint hit!")
     return jsonify({
         "status": "success",
         "message": "Server is running!"
     })
-@app.route("/test", methods=["GET"])
+@app.route("/test", methods=["GET,OPTIONS"])
 def test_connection():
     return jsonify({
         "status": "success",
@@ -46,8 +50,15 @@ def test():
         "message": "API endpoint is working!"
     })
 
-@app.route("/api/getConversations", methods=["GET"])
+@app.route("/api/getConversations", methods=["GET", "OPTIONS"])
 def get_conversations():
+    if request.method == "OPTIONS":
+        # Add CORS headers for preflight
+        response = jsonify({})
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Instagram-Access-Token')
+        response.headers.add('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
+        return response, 200
     try:
         print("=== Get Conversations endpoint hit ===")
         print("Headers received:", dict(request.headers))

@@ -123,7 +123,7 @@ export const initialNodes: AppNode[] = [
   { 
     id: "c", 
     type:"orders",
-    position: { x: 100, y: 100 }, 
+    position: { x: 250, y: 250 }, 
     data: {
         label: "step 2", 
         conversations: useStore.getState().conversations,
@@ -144,7 +144,7 @@ export const initialNodes: AppNode[] = [
   {
     id: "d",
     type: "reciept",
-    position: { x: 0, y: 200 },
+    position: { x: 100, y: 400 },
     data: {
       label: "step 3", 
       orders: useStore.getState().processedOrders,

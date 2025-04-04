@@ -6,6 +6,7 @@ import pandas as pd
 import openai
 import re
 from openai import OpenAI
+import os
 
 
 
@@ -393,6 +394,6 @@ def send_message():
 
 
 if __name__ == "__main__":
-    PORT = 8001
+    PORT = int(os.environ.get("PORT", 8000))
     print(f"Server starting on {PORT}")
     app.run(host='0.0.0.0', port=PORT, debug=True)

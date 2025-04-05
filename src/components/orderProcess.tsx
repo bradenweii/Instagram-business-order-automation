@@ -20,6 +20,14 @@ interface OrderProcessProps {
     onProcessComplete?: (orders: any[]) => void;
   };
 }
+interface InstagramMessage {
+  message: string;
+  created_time: string;
+  from?: {
+      username: string;
+      id: string;
+  };
+}
 
 const OrderProcessingNode = ({ data }: OrderProcessProps) => {
   const [messages, setMessages] = useState<ProcessedMessage[]>([]);
@@ -35,23 +43,27 @@ const OrderProcessingNode = ({ data }: OrderProcessProps) => {
 
   useEffect(() => {
     console.log("Stage 2 - Received conversations:", conversations);
-    console.log("Stage 2 - Received access token:", accessToken);
+    console.log("Stage 2 - Raw conversation data:", JSON.stringify(conversations[0], null, 2));
 
     if (conversations && conversations.length > 0) {
-      const extractedMessages = conversations.flatMap(conv => {
-        const messages = conv.messages?.data || [];
-        return messages.map((msg:ProcessedMessage) => ({
-          message: msg.message,
-          created_time: msg.created_time,
-          name: msg.from?.username || conv.name,
-          user_id: msg.from?.id
-        }));
-      }).filter(msg => msg.message && msg.message.toLowerCase().includes('order'));
-      
-      console.log("Stage 2 - Extracted messages:", extractedMessages);
-      setMessages(extractedMessages);
+        const extractedMessages = conversations.flatMap(conv => {
+            console.log("Processing conversation:", conv);
+            console.log("Messages data:", conv.messages);
+
+            const messages = conv.messages?.data || [];
+            return messages.map((msg:InstagramMessage )=> ({
+                message: msg.message || '',
+                created_time: msg.created_time || '',
+                name: msg.from?.username || conv.name || 'Unknown',
+                user_id: msg.from?.id || conv.id || ''
+            }));
+        });
+        
+       
+        
+        setMessages(extractedMessages);
     }
-  }, [conversations]);
+}, [conversations, accessToken]);
 
 const processOrders = async () => {
     setIsProcessing(true);
@@ -157,7 +169,7 @@ const processOrders = async () => {
       </div>
 
       {/* Display received messages */}
-      {messages && messages.length > 0 && (
+      {/*{messages && messages.length > 0 && (
         <div className="mt-4 p-2 border border-gray-200 rounded bg-gray-100">
           <h4 className="font-semibold">Received Messages:</h4>
           <ul className="text-sm max-h-40 overflow-y-auto">
@@ -169,6 +181,7 @@ const processOrders = async () => {
           </ul>
         </div>
       )}
+        */}
 
 
       <button

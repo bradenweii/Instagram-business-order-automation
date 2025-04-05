@@ -40,7 +40,8 @@ export default function App() {
               ...node,
               data: {
                 ...node.data,
-                conversations: sourceNode.data.conversations
+                conversations: sourceNode.data.conversations,
+                accessToken: sourceNode.data.accessToken
               }
             };
           }

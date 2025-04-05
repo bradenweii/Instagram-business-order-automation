@@ -49,10 +49,12 @@ const igLogin = ({ data }: IgLoginProps) => {
 
                 // Update the store and notify parent
                 if (data.onDataUpdate) {
-                    data.onDataUpdate({
+                    const updateData = {
                         conversations: conversations,
                         accessToken: accessKey
-                    });
+                    };
+                    console.log("Updating parent with data:", updateData);
+                    data.onDataUpdate(updateData);
                 }
             }
 

@@ -176,7 +176,7 @@ def parse_order_info(order_info,id):
         item_match = re.search(r"- Item: (.+)", block)
         size_match = re.search(r"- Size: (.+)", block)
         quantity_match = re.search(r"- Quantity: (\d+)", block)
-        special_match = re.search(r"- Special Requests: (.+)", block)
+        special_match = re.search(r"- Special Request: (.+)", block)
 
 
         order_data = {

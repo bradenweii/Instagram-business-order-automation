@@ -184,7 +184,7 @@ def parse_order_info(order_info,id):
             "Item": item_match.group(1) if item_match else "N/A",
             "Size": size_match.group(1) if size_match else "N/A",
             "Quantity": int(quantity_match.group(1)) if quantity_match else 0,
-            "Special Requests": special_match.group(1) if special_match else "None"
+            "Special Request": special_match.group(1) if special_match else "None"
         }
         
         orders.append(order_data)

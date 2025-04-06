@@ -31,12 +31,12 @@ Ensure you have the following installed:
 
 
 
-## Usage
-1. **Login to Instagram** using the integrated authentication system.
-2. **Fetch Messages** to automatically scan for customer orders.
-3. **Process Orders** where ChatGPT extracts relevant details.
-4. **Generate Receipts** and store them in CSV/Google Sheets.
-5. **Send Receipts** back to customers through Instagram messages.
+## Deployment
+
+Frontend: Deployed on Vercel
+
+Backend (Flask API): Hosted on Render
+This makes the system fully accessible online, with real-time integration between React Flow and the AI-powered backend.
 
 
 ## Tech Stack

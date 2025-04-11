@@ -21,7 +21,7 @@ This system increases efficiency by eliminating the work of manually taking larg
 ## Order CSV file preview: 
 ![UI Preview](public/orders.png)
 ## Instagram Chat preview(Automated message): 
-![UI Preview](public/IMG_2819.PNG)
+![UI Preview](public/IMG_2819-2.png)
 ### Prerequisites
 Ensure you have the following installed:
 - **Node.js** (for the frontend and automation scripts)

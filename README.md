@@ -20,7 +20,8 @@ This system increases efficiency by eliminating the work of manually taking larg
 - Efficiency Boost:** Reduces manual effort in handling large order volumes.
 ## Order CSV file preview: 
 ![UI Preview](public/orders.png)
-
+## Instagram Chat preview(Automated message): 
+![UI Preview](public/IMG_2819.PNG)
 ### Prerequisites
 Ensure you have the following installed:
 - **Node.js** (for the frontend and automation scripts)
